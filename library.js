@@ -1,4 +1,10 @@
 let myLibrary=[];
+const submitButton=document.querySelector(".submit");
+const container=document.querySelector(".container");
+const state=document.querySelector("#state");
+const form=document.querySelector("form");
+
+
 
 function Book(title, author, year, pages, state) {
     this.title=title;
@@ -9,6 +15,7 @@ function Book(title, author, year, pages, state) {
     this.info=function() {
         return `"${title}" by ${author}, written in ${year}, ${pages} pages, ${state}`
     }
+
 };
 
 const theMurderAtTheVicarage = new Book("The Murder at the Vicarage", "Agatha Christie", 1930, 256, true);
@@ -23,16 +30,33 @@ const deathComesAsTheEnd = new Book("Death Comes As the End", "Agatha Christie",
 console.log(deathComesAsTheEnd.info());
 myLibrary.push(deathComesAsTheEnd);
 
-
 const theClocks = new Book("The Clocks", "Agatha Christie", 1963, 256, false);
 console.log(theClocks.info());
 myLibrary.push(theClocks);
 
-function addBookToLibrary() {
-    myLibrary.push();
-}
+function addBookToLibrary(e) {
+        e.preventDefault();
+        const checkVal=form.checkValidity();
+        form.reportValidity();
+        if (checkVal) {
+        const titleForm=document.getElementById("title").value;
+        const authorForm=document.getElementById("author").value;
+        const yearForm=document.getElementById("year").value;
+        const pagesForm=document.getElementById("pages").value;
+        const stateForm=document.getElementById("state").checked;
+        let newBook=new Book(titleForm, authorForm, yearForm, pagesForm, stateForm);
+        myLibrary.push(newBook); 
+        document.querySelector("form").reset();
+        displayLibrary(newBook);
+        document.querySelector(".form-popup").style.display = "none";   
+        }  
+};
 
-const container=document.querySelector(".container");
+document.addEventListener("DOMContentLoaded", ()=> {
+    submitButton.addEventListener("click", addBookToLibrary);
+    
+});
+
 
 myLibrary.forEach(displayLibrary);
 
@@ -41,6 +65,8 @@ function displayLibrary(item) {
     card.classList.add("card");
     const title=document.createElement("h2");
     title.textContent=`"${item.title}"`;
+    const description=document.createElement("div");
+    description.classList.add("description");
     const author=document.createElement("p");
     author.textContent=`Author: ${item.author}`;
     const date=document.createElement("p");
@@ -49,21 +75,42 @@ function displayLibrary(item) {
     pages.textContent=`Pages: ${item.pages}`;
     const state=document.createElement("p");
     if (item.state) {
-        state.textContent=`Read: yes`;
+        state.textContent="Read: yes";
     } else {
-        state.textContent=`Read: no`;
+        state.textContent="Read: no";
+        card.classList.add("unread");
     }
+    const buttons=document.createElement("div");
+    buttons.classList.add("buttons");
     const changeButton=document.createElement("button");
     changeButton.classList.add("change");
     changeButton.textContent="Change read status";
+    changeButton.addEventListener("click", (e)=> {
+        if (item.state) {
+            item.state=false;
+            state.textContent="Read: no";
+            card.classList.add("unread");
+        } else {
+            item.state=true;
+            state.textContent="Read: yes";
+            card.classList.remove("unread");
+        }
+    })
 
     const removeButton=document.createElement("button");
     removeButton.classList.add("remove");
     removeButton.textContent="Remove from library";
+    removeButton.addEventListener("click", (e)=> {
+        container.removeChild(card);
+    })
 
+    description.append(author, date, pages, state);
+    buttons.append(changeButton, removeButton);
+
+    card.append(title, description, buttons);
     
-    card.append(title, author, date, pages, state, changeButton, removeButton);
     container.append(card);
+
 
 };
 
@@ -73,6 +120,7 @@ function openForm() {
   
   function closeForm() {
     document.querySelector(".form-popup").style.display = "none";
+    document.querySelector("form").reset();
   }
 
 
