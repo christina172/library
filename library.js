@@ -52,7 +52,7 @@ function displayLibrary(item) {
   const author = document.createElement("p");
   author.textContent = `Author: ${item.author}`;
   const date = document.createElement("p");
-  date.textContent = `Publishing date: ${item.year}`;
+  date.textContent = `Publishing year: ${item.year}`;
   const pages = document.createElement("p");
   pages.textContent = `Pages: ${item.pages}`;
   const state = document.createElement("p");
