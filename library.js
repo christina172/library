@@ -3,15 +3,17 @@ const submitButton = document.querySelector(".submit");
 const container = document.querySelector(".container");
 const form = document.querySelector("form");
 
-function Book(title, author, year, pages, state) {
-  this.title = title;
-  this.author = author;
-  this.year = year;
-  this.pages = pages;
-  this.state = state;
-  this.info = function () {
+class Book {
+  constructor(title, author, year, pages, state) {
+    this.title = title;
+    this.author = author;
+    this.year = year;
+    this.pages = pages;
+    this.state = state;
+  }
+  info() {
     return `"${title}" by ${author}, written in ${year}, ${pages} pages, ${state}`;
-  };
+  }
 }
 
 const theMurderAtTheVicarage = new Book(
